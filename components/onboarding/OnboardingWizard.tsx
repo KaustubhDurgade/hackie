@@ -52,9 +52,11 @@ export function OnboardingWizard() {
           guestToken,
         }),
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data: Record<string, string> = {};
+      try { data = JSON.parse(text); } catch { /* not json */ }
       if (!res.ok) {
-        setSubmitError(data.error ?? 'Something went wrong. Please try again.');
+        setSubmitError(data.error ?? `Server error ${res.status}: ${text.slice(0, 120)}`);
         setLoading(false);
         return;
       }

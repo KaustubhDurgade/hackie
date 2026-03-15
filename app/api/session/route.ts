@@ -40,20 +40,26 @@ export async function POST(req: NextRequest) {
 
   const expiresAt = userId ? null : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-  const session = await prisma.session.create({
-    data: {
-      shareToken:  nanoid(12),
-      userId:      userId ?? null,
-      guestToken:  userId ? null : (guestToken ?? nanoid(24)),
-      track,
-      timeLimitHrs,
-      teamSize,
-      expertise:   skillsText ? { skillsText } : {},
-      tools:       tools ?? { hackathon: [], personal: [] },
-      judges:      judges ?? [],
-      expiresAt,
-    },
-  });
+  let session;
+  try {
+    session = await prisma.session.create({
+      data: {
+        shareToken:  nanoid(12),
+        userId:      userId ?? null,
+        guestToken:  userId ? null : (guestToken ?? nanoid(24)),
+        track,
+        timeLimitHrs,
+        teamSize,
+        expertise:   skillsText ? { skillsText } : {},
+        tools:       tools ?? { hackathon: [], personal: [] },
+        judges:      judges ?? [],
+        expiresAt,
+      },
+    });
+  } catch (err) {
+    console.error('[POST /api/session] DB error:', err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
 
   return NextResponse.json({
     sessionId:  session.id,
