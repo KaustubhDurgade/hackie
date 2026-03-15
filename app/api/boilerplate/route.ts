@@ -28,7 +28,11 @@ export async function POST(req: NextRequest) {
   const isGuest = guestToken && session.guestToken === guestToken;
   if (!isOwner && !isGuest) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
-  const templatePath = path.join(TEMPLATE_DIR, template);
+  const templatePath = path.resolve(TEMPLATE_DIR, template);
+  // Defense-in-depth: ensure resolved path is still inside TEMPLATE_DIR
+  if (!templatePath.startsWith(path.resolve(TEMPLATE_DIR) + path.sep)) {
+    return NextResponse.json({ error: 'Invalid template' }, { status: 400 });
+  }
   if (!fs.existsSync(templatePath)) {
     return NextResponse.json({ error: 'Template not found' }, { status: 404 });
   }

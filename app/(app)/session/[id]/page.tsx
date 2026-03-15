@@ -32,8 +32,23 @@ export default function SessionPage({ params }: SessionPageProps) {
   const [shareUrl, setShareUrl]             = useState('');
   const [copied, setCopied]                 = useState(false);
   const [persistedMessages, setPersistedMessages] = useState<ChatMessage[]>([]);
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
 
   const { nodes, edges, applyUpdate } = useCanvasState();
+
+  const positionSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleNodePositionsChange = useCallback((positions: Record<string, { x: number; y: number }>) => {
+    setNodePositions(positions);
+    if (positionSaveTimer.current) clearTimeout(positionSaveTimer.current);
+    positionSaveTimer.current = setTimeout(async () => {
+      const guestToken = localStorage.getItem('hackie_guest_token');
+      await fetch('/api/session', {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ sessionId, phaseData: { nodePositions: positions }, guestToken }),
+      }).catch(console.error);
+    }, 1000);
+  }, [sessionId]);
 
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autosave = useCallback((canvasNodes: typeof nodes, canvasEdges: typeof edges) => {
@@ -61,7 +76,10 @@ export default function SessionPage({ params }: SessionPageProps) {
 
   useEffect(() => {
     const guestToken = localStorage.getItem('hackie_guest_token');
-    fetch(`/api/session?id=${sessionId}${guestToken ? `&guest_token=${guestToken}` : ''}`)
+    // VULN-006: send guest token as header, not query param
+    fetch(`/api/session?id=${sessionId}`, {
+      headers: guestToken ? { 'x-guest-token': guestToken } : {},
+    })
       .then(r => r.json())
       .then(data => {
         if (data.error) { router.push('/'); return; }
@@ -69,7 +87,9 @@ export default function SessionPage({ params }: SessionPageProps) {
         const phase = (data.session as Record<string, unknown>).currentPhase as number ?? 1;
         setCurrentPhase(phase);
         setMaxUnlocked(phase);
-        setShareUrl(`${window.location.origin}/session/${sessionId}/share`);
+        // VULN-004: share URL uses shareToken, not session UUID
+        const shareToken = (data.session as Record<string, unknown>).shareToken as string;
+        setShareUrl(`${window.location.origin}/share/${shareToken}`);
 
         // Load persisted messages
         const rawMessages = (data.session as Record<string, unknown>).messages as
@@ -82,6 +102,12 @@ export default function SessionPage({ params }: SessionPageProps) {
             phase:   m.phase ?? 1,
           }));
           setPersistedMessages(msgs);
+        }
+
+        // Restore saved node positions from phaseData
+        const phaseData = (data.session as Record<string, unknown>).phaseData as Record<string, unknown> | null;
+        if (phaseData?.nodePositions) {
+          setNodePositions(phaseData.nodePositions as Record<string, { x: number; y: number }>);
         }
 
         // Restore canvas snapshot
@@ -103,7 +129,14 @@ export default function SessionPage({ params }: SessionPageProps) {
     const next = Math.min(currentPhase + 1, 5);
     setCurrentPhase(next);
     setMaxUnlocked(prev => Math.max(prev, next));
-  }, [currentPhase]);
+    // BUG #5: persist phase so dashboard shows correct progress
+    const guestToken = localStorage.getItem('hackie_guest_token');
+    fetch('/api/session', {
+      method:  'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, currentPhase: next, guestToken }),
+    }).catch(console.error);
+  }, [currentPhase, sessionId]);
 
   const handlePhaseClick = useCallback((phaseId: number) => {
     if (phaseId <= maxUnlockedPhase) setCurrentPhase(phaseId);
@@ -118,7 +151,6 @@ export default function SessionPage({ params }: SessionPageProps) {
   }
 
   const sess = session as Record<string, unknown> | null;
-  const phaseInitialMessages = persistedMessages.filter(m => m.phase === currentPhase);
 
   return (
     <div className="h-screen bg-[#f5f3ef] flex overflow-hidden">
@@ -180,7 +212,9 @@ export default function SessionPage({ params }: SessionPageProps) {
             </button>
           )}
           {!!sess?.teamSize && (
-            <p className="text-[10px] text-[#c8c1b8] uppercase tracking-widest">{String(sess.teamSize)} people</p>
+            <p className="text-[10px] text-[#c8c1b8] uppercase tracking-widest">
+              {String(sess.teamSize)} {Number(sess.teamSize) === 1 ? 'person' : 'people'}
+            </p>
           )}
           <div className="pt-1">
             <UserButton
@@ -199,13 +233,18 @@ export default function SessionPage({ params }: SessionPageProps) {
         </div>
       </aside>
 
-      {/* Canvas */}
-      <div className="flex-1 min-w-0" style={{ flexBasis: '55%', flexGrow: 0 }}>
-        <HackieCanvas canvasNodes={nodes} canvasEdges={edges} />
+      {/* Canvas — flex-1 so it takes all space left after sidebar + chat */}
+      <div className="flex-1 min-w-0">
+        <HackieCanvas
+          canvasNodes={nodes}
+          canvasEdges={edges}
+          savedPositions={nodePositions}
+          onNodePositionsChange={handleNodePositionsChange}
+        />
       </div>
 
-      {/* Chat — keyed by currentPhase so streaming state resets; initialMessages seed from DB */}
-      <div key={currentPhase} style={{ flexBasis: '45%', flexGrow: 0 }} className="min-w-0">
+      {/* Chat — no key prop: ChatPanel manages all phases internally, never remounts */}
+      <div className="w-[420px] shrink-0 min-w-0">
         <ChatPanel
           sessionId={sessionId}
           currentPhase={currentPhase}
@@ -213,7 +252,7 @@ export default function SessionPage({ params }: SessionPageProps) {
           initialTokensUsed={sess?.tokensUsed as number ?? 0}
           tokenBudget={sess?.tokenBudget as number ?? 60000}
           onCanvasUpdate={handleCanvasUpdate}
-          initialMessages={phaseInitialMessages}
+          initialMessages={persistedMessages}
         />
       </div>
 

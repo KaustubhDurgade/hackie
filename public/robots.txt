@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /session/
+
+# Share pages are intentionally public
+Allow: /share/
+
+Sitemap: https://hackie.app/sitemap.xml

@@ -45,3 +45,9 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# playwright logs
+/.playwright-mcp/
+
+# debug screenshots
+*.png

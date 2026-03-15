@@ -36,12 +36,21 @@ export function ChatPanel({
   initialMessages = [],
 }: ChatPanelProps) {
   const [messages, setMessages]          = useState<ChatMessage[]>(initialMessages);
+  const seededRef = useRef(false);
+
+  // Seed from DB once when initialMessages arrive (async load after mount)
+  useEffect(() => {
+    if (seededRef.current || initialMessages.length === 0) return;
+    seededRef.current = true;
+    setMessages(initialMessages);
+  }, [initialMessages]);
   const [input, setInput]                = useState('');
   const [isStreaming, setIsStreaming]     = useState(false);
   const [streamingContent, setStreaming] = useState('');
   const [tokensUsed, setTokensUsed]      = useState(initialTokensUsed);
   const [isApplyingCanvas, setApplyingCanvas] = useState(false);
   const [showMoveOnPrompt, setShowMoveOnPrompt] = useState(false);
+  const [canvasApplied, setCanvasApplied] = useState(false);
 
   const prevPhaseRef = useRef(currentPhase);
   useEffect(() => {
@@ -52,6 +61,7 @@ export function ChatPanel({
       setInput('');
       setApplyingCanvas(false);
       setShowMoveOnPrompt(false);
+      setCanvasApplied(false);
     }
   }, [currentPhase]);
 
@@ -172,6 +182,7 @@ export function ChatPanel({
 
     try {
       await streamRequest('__CANVAS_APPLY__', true);
+      setCanvasApplied(true);
       if (currentPhase < 5) setShowMoveOnPrompt(true);
     } catch (err) {
       console.error('[ChatPanel] canvas apply error:', err);
@@ -190,7 +201,7 @@ export function ChatPanel({
   };
 
   const hasExchange   = phaseMessages.some(m => m.role === 'assistant');
-  const canApply      = hasExchange && !isStreaming;
+  const canApply      = hasExchange && !isStreaming && !canvasApplied;
   const canNextPhase  = hasExchange && !isStreaming && currentPhase < 5;
   const nextPhaseName = PHASE_NAMES[currentPhase + 1];
 
@@ -242,7 +253,7 @@ export function ChatPanel({
               disabled={isApplyingCanvas}
               className="text-[10px] uppercase tracking-widest border border-[#e2ddd6] px-3 py-1.5 rounded-lg hover:border-[#b8956a] hover:text-[#b8956a] text-[#a8a29e] transition-colors disabled:opacity-40"
             >
-              {isApplyingCanvas ? 'Applying...' : 'Apply to canvas →'}
+              {isApplyingCanvas ? 'Applying...' : canvasApplied ? 'Canvas updated ✓' : 'Apply to canvas →'}
             </button>
           )}
           {canNextPhase && (

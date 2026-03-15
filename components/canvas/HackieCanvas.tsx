@@ -23,6 +23,7 @@ import { FeatureNode }  from './nodes/FeatureNode';
 import { ServiceNode }  from './nodes/ServiceNode';
 import { DatabaseNode } from './nodes/DatabaseNode';
 import { UserNode }     from './nodes/UserNode';
+import { FloatingEdge } from './FloatingEdge';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nodeTypes: Record<string, any> = {
@@ -34,6 +35,11 @@ const nodeTypes: Record<string, any> = {
   page:      FeatureNode,
   component: FeatureNode,
   label:     DiagramLabelNode,
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const edgeTypes: Record<string, any> = {
+  floating: FloatingEdge,
 };
 
 function DiagramLabelNode({ data }: { data: Record<string, unknown> }) {
@@ -49,6 +55,8 @@ function DiagramLabelNode({ data }: { data: Record<string, unknown> }) {
 interface HackieCanvasProps {
   canvasNodes: CanvasNode[];
   canvasEdges: CanvasEdge[];
+  savedPositions?: Record<string, { x: number; y: number }>;
+  onNodePositionsChange?: (positions: Record<string, { x: number; y: number }>) => void;
 }
 
 function getEdgeColor(sourceNodePhase?: number): string {
@@ -92,6 +100,7 @@ function buildReactFlowEdges(edges: CanvasEdge[], phaseByNodeId: Map<string, num
     const color = getEdgeColor(phase);
     return {
       id:           edge.id,
+      type:         'floating',
       source:       edge.source,
       target:       edge.target,
       label:        edge.label,
@@ -104,7 +113,7 @@ function buildReactFlowEdges(edges: CanvasEdge[], phaseByNodeId: Map<string, num
   });
 }
 
-export function HackieCanvas({ canvasNodes, canvasEdges }: HackieCanvasProps) {
+export function HackieCanvas({ canvasNodes, canvasEdges, savedPositions, onNodePositionsChange }: HackieCanvasProps) {
   const [rfNodes, setRfNodes, onNodesChange] = useNodesState<Node>([]);
   const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
@@ -130,9 +139,28 @@ export function HackieCanvas({ canvasNodes, canvasEdges }: HackieCanvasProps) {
       if (n.phase != null) phaseByNodeId.set(n.id, n.phase);
     }
 
-    setRfNodes(buildReactFlowNodes(positioned));
+    // Apply saved drag positions as overrides on top of Dagre layout
+    const rfNodesToSet = buildReactFlowNodes(positioned).map(n => {
+      const saved = savedPositions?.[n.id];
+      return saved ? { ...n, position: saved } : n;
+    });
+
+    setRfNodes(rfNodesToSet);
     setRfEdges(buildReactFlowEdges(canvasEdges, phaseByNodeId));
-  }, [canvasNodes, canvasEdges, setRfNodes, setRfEdges]);
+  }, [canvasNodes, canvasEdges, savedPositions, setRfNodes, setRfEdges]);
+
+  const handleNodeDragStop = useCallback(() => {
+    if (!onNodePositionsChange) return;
+    // Collect current positions of all non-label nodes from RF state
+    setRfNodes(current => {
+      const positions: Record<string, { x: number; y: number }> = {};
+      for (const n of current) {
+        if (n.type !== 'label') positions[n.id] = { x: n.position.x, y: n.position.y };
+      }
+      onNodePositionsChange(positions);
+      return current; // no state change, just reading
+    });
+  }, [onNodePositionsChange, setRfNodes]);
 
   const isEmpty = canvasNodes.length === 0;
 
@@ -152,7 +180,9 @@ export function HackieCanvas({ canvasNodes, canvasEdges }: HackieCanvasProps) {
         edges={rfEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onNodeDragStop={handleNodeDragStop}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         fitViewOptions={{ padding: 0.25 }}
         proOptions={{ hideAttribution: true }}

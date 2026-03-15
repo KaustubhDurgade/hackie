@@ -1,11 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-// Routes that require a signed-in Clerk account.
-// The guest-token flow handles unauthenticated access to API routes
-// directly inside each route handler, so we only hard-protect the
-// session UI pages here.
+// Only hard-protect routes that have no guest-token fallback.
+// Session pages (/session/*, /share/*) are intentionally NOT protected here
+// because they support guest-token access; auth is enforced inside each API route.
 const isProtectedRoute = createRouteMatcher([
-  '/session(.*)',
+  '/dashboard(.*)',
+  '/account(.*)',
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -16,7 +16,6 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static assets
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     '/(api|trpc)(.*)',
   ],

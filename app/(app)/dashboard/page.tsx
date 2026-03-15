@@ -64,6 +64,8 @@ export default function DashboardPage() {
             New project
           </Link>
           <UserButton
+            userProfileUrl="/account"
+            userProfileMode="navigation"
             appearance={{
               variables: { colorBackground: '#ffffff', colorText: '#1c1917', borderRadius: '8px' },
               elements: {

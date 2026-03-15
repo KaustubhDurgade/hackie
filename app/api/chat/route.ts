@@ -3,6 +3,29 @@ import { prisma } from '@/lib/db/prisma';
 import { streamResponse, type OrchestratorMessage } from '@/lib/llm/orchestrator';
 import { StreamParser } from '@/lib/llm/stream-parser';
 import { auth } from '@clerk/nextjs/server';
+import { z } from 'zod';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const ChatBodySchema = z.object({
+  sessionId:  z.string().regex(UUID_RE, 'Invalid sessionId format'),
+  message:    z.string().min(1).max(4000),
+  guestToken: z.string().optional(),
+  phase:      z.number().int().min(1).max(5).optional(),
+});
+
+// Simple per-session sliding-window rate limiter (in-process; good for single instances)
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT_WINDOW_MS  = 60_000; // 1 minute
+const RATE_LIMIT_MAX_REQS   = 20;     // max 20 messages/min per session
+
+function isRateLimited(key: string): boolean {
+  const now  = Date.now();
+  const hits = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_LIMIT_WINDOW_MS);
+  hits.push(now);
+  rateLimitMap.set(key, hits);
+  return hits.length > RATE_LIMIT_MAX_REQS;
+}
 
 const CANVAS_APPLY_TRIGGER = '__CANVAS_APPLY__';
 
@@ -26,11 +49,15 @@ function isNaturalLanguageCanvasApply(msg: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { sessionId, message, guestToken, phase: requestPhase } = body;
+  const body   = await req.json();
+  const parsed = ChatBodySchema.safeParse(body);
+  if (!parsed.success) {
+    return new Response(parsed.error.issues[0]?.message ?? 'Invalid request', { status: 400 });
+  }
+  const { sessionId, message, guestToken, phase: requestPhase } = parsed.data;
 
-  if (!sessionId || !message) {
-    return new Response('sessionId and message required', { status: 400 });
+  if (isRateLimited(sessionId)) {
+    return new Response('Too many requests — slow down a bit.', { status: 429 });
   }
 
   const isCanvasApply = message === CANVAS_APPLY_TRIGGER || isNaturalLanguageCanvasApply(message);

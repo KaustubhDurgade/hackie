@@ -19,6 +19,7 @@ export function OnboardingWizard() {
   const router    = useRouter();
   const [step, setStep]       = useState<Step>(1);
   const [loading, setLoading] = useState(false);
+  const [step1Error, setStep1Error] = useState('');
 
   const [track, setTrack]         = useState('');
   const [timeLimitHrs, setTime]   = useState<number>(24);
@@ -94,32 +95,46 @@ export function OnboardingWizard() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs text-[#6b6560] uppercase tracking-widest mb-1.5">Track / Theme</label>
-                <Input value={track} onChange={e => setTrack(e.target.value)}
+                <label htmlFor="track" className="block text-xs text-[#6b6560] uppercase tracking-widest mb-1.5">Track / Theme</label>
+                <Input id="track" value={track} onChange={e => setTrack(e.target.value)}
                   placeholder="e.g. AI for Good, FinTech, Open" className={inputCls} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-[#6b6560] uppercase tracking-widest mb-1.5">Time limit (hrs)</label>
-                  <Input type="number" min={1} max={168} value={timeLimitHrs}
+                  <label htmlFor="time-limit" className="block text-xs text-[#6b6560] uppercase tracking-widest mb-1.5">Time limit (hrs)</label>
+                  <Input id="time-limit" type="number" min={1} max={168} value={timeLimitHrs}
                     onChange={e => setTime(Number(e.target.value))} className={inputCls} />
                 </div>
                 <div>
                   <label className="block text-xs text-[#6b6560] uppercase tracking-widest mb-1.5">Team size</label>
                   <div className="flex items-center gap-3 h-10">
-                    <button onClick={() => setTeamSize(Math.max(1, teamSize - 1))}
-                      className="w-8 h-8 border border-[#e2ddd6] text-[#6b6560] hover:border-[#b8956a] hover:text-[#b8956a] rounded-lg transition-colors text-sm bg-white">−</button>
+                    <button
+                      onClick={() => setTeamSize(Math.max(1, teamSize - 1))}
+                      disabled={teamSize <= 1}
+                      aria-label="Decrease team size"
+                      className="w-8 h-8 border border-[#e2ddd6] text-[#6b6560] hover:border-[#b8956a] hover:text-[#b8956a] rounded-lg transition-colors text-sm bg-white disabled:opacity-30 disabled:cursor-not-allowed">−</button>
                     <span className="text-[#1c1917] font-display font-bold w-4 text-center">{teamSize}</span>
-                    <button onClick={() => setTeamSize(Math.min(10, teamSize + 1))}
-                      className="w-8 h-8 border border-[#e2ddd6] text-[#6b6560] hover:border-[#b8956a] hover:text-[#b8956a] rounded-lg transition-colors text-sm bg-white">+</button>
+                    <button
+                      onClick={() => setTeamSize(Math.min(10, teamSize + 1))}
+                      disabled={teamSize >= 10}
+                      aria-label="Increase team size"
+                      className="w-8 h-8 border border-[#e2ddd6] text-[#6b6560] hover:border-[#b8956a] hover:text-[#b8956a] rounded-lg transition-colors text-sm bg-white disabled:opacity-30 disabled:cursor-not-allowed">+</button>
                   </div>
                 </div>
               </div>
             </div>
 
+            {step1Error && (
+              <p className="text-[#c0392b] text-xs">{step1Error}</p>
+            )}
             <div className="flex justify-end">
-              <button onClick={() => setStep(2)}
+              <button onClick={() => {
+                if (!track.trim()) { setStep1Error('Track / Theme is required.'); return; }
+                if (!timeLimitHrs || timeLimitHrs < 1) { setStep1Error('Time limit must be at least 1 hour.'); return; }
+                setStep1Error('');
+                setStep(2);
+              }}
                 className="bg-[#1c1917] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#3a3530] transition-colors">
                 Continue
               </button>

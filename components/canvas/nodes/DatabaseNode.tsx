@@ -10,6 +10,7 @@ export function DatabaseNode({ data }: NodeProps) {
       className="border rounded-lg px-3 py-2 min-w-[130px] max-w-[175px] shadow-sm"
     >
       <Handle type="target" position={Position.Top}    style={{ background: c.bg, border: '2px solid white', width: 8, height: 8, borderRadius: 4 }} />
+      <Handle type="target" position={Position.Left}   style={{ background: c.bg, border: '2px solid white', width: 8, height: 8, borderRadius: 4 }} />
       <div className="flex items-start gap-1.5">
         {d.step != null && (
           <span style={{ background: c.bg, color: c.border }} className="text-[9px] font-bold rounded-sm w-4 h-4 flex items-center justify-center shrink-0 mt-px">
@@ -20,6 +21,7 @@ export function DatabaseNode({ data }: NodeProps) {
       </div>
       {d.sublabel && <div style={{ color: c.bg, opacity: 0.75 }} className="text-[9px] mt-1 leading-tight">{d.sublabel}</div>}
       <Handle type="source" position={Position.Bottom} style={{ background: c.bg, border: '2px solid white', width: 8, height: 8, borderRadius: 4 }} />
+      <Handle type="source" position={Position.Right}  style={{ background: c.bg, border: '2px solid white', width: 8, height: 8, borderRadius: 4 }} />
     </div>
   );
 }

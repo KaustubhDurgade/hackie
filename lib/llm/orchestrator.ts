@@ -5,9 +5,13 @@ import { PHASE_PROMPTS } from './prompts/phases';
 
 // ─── Provider selection ───────────────────────────────────────────────────────
 
-const USE_OLLAMA = process.env.LLM_PROVIDER === 'ollama';
+const LLM_PROVIDER    = process.env.LLM_PROVIDER ?? 'anthropic';
+const USE_GROQ        = LLM_PROVIDER === 'groq';
+const USE_OLLAMA      = LLM_PROVIDER === 'ollama';
+const GROQ_API_KEY    = process.env.GROQ_API_KEY ?? '';
+const GROQ_MODEL      = process.env.GROQ_MODEL ?? 'llama-3.3-70b-versatile';
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? 'llama3.1';
+const OLLAMA_MODEL    = process.env.OLLAMA_MODEL ?? 'llama3.1';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -76,7 +80,9 @@ function buildContextBlock(ctx: HackathonContext): string {
 
 function buildSystemPrompt(ctx: OrchestratorContext): string {
   if (ctx.isCanvasApply) {
-    return [CANVAS_APPLY_SYSTEM_PROMPT, buildContextBlock(ctx.hackathonContext)]
+    // Tell the AI exactly which phase number to stamp on all nodes it generates
+    const phaseInstruction = `Current phase: ${ctx.phase}\nSet "phase": ${ctx.phase} on EVERY node you generate. This controls the node colour on the canvas.`;
+    return [CANVAS_APPLY_SYSTEM_PROMPT, phaseInstruction, buildContextBlock(ctx.hackathonContext)]
       .filter(Boolean)
       .join('\n\n---\n\n');
   }
@@ -108,6 +114,41 @@ async function* streamClaude(ctx: OrchestratorContext): AsyncGenerator<StreamEve
       yield { type: 'usage', inputTokens: 0, outputTokens: event.usage.output_tokens };
     }
   }
+}
+
+// ─── Groq provider (OpenAI-compatible) ───────────────────────────────────────
+
+async function* streamGroq(ctx: OrchestratorContext): AsyncGenerator<StreamEvent> {
+  const client = new OpenAI({
+    baseURL: 'https://api.groq.com/openai/v1',
+    apiKey:  GROQ_API_KEY,
+  });
+
+  const messages: OpenAI.ChatCompletionMessageParam[] = [
+    { role: 'system', content: buildSystemPrompt(ctx) },
+    ...ctx.messages.map(m => ({ role: m.role, content: m.content } as OpenAI.ChatCompletionMessageParam)),
+  ];
+
+  const stream = await client.chat.completions.create({
+    model:      GROQ_MODEL,
+    messages,
+    stream:     true,
+    max_tokens: Math.min(4096, ctx.tokenBudget - ctx.tokensUsed),
+  });
+
+  let inputTokens  = 0;
+  let outputTokens = 0;
+
+  for await (const chunk of stream) {
+    const delta = chunk.choices[0]?.delta?.content;
+    if (delta) yield { type: 'text', content: delta };
+    if (chunk.usage) {
+      inputTokens  = chunk.usage.prompt_tokens ?? inputTokens;
+      outputTokens = chunk.usage.completion_tokens ?? outputTokens;
+    }
+  }
+
+  yield { type: 'usage', inputTokens, outputTokens };
 }
 
 // ─── Ollama provider (OpenAI-compatible) ─────────────────────────────────────
@@ -162,14 +203,17 @@ export async function* streamResponse(ctx: OrchestratorContext): AsyncGenerator<
     return;
   }
 
-  if (USE_OLLAMA) {
-    console.log(`[llm] Using Ollama — model: ${OLLAMA_MODEL} @ ${OLLAMA_BASE_URL}`);
+  if (USE_GROQ) {
+    yield* streamGroq(ctx);
+  } else if (USE_OLLAMA) {
     yield* streamOllama(ctx);
   } else {
     yield* streamClaude(ctx);
   }
 }
 
-export const currentProvider = USE_OLLAMA
-  ? { name: 'ollama', model: OLLAMA_MODEL }
-  : { name: 'anthropic', model: 'claude-sonnet-4-6' };
+export const currentProvider = USE_GROQ
+  ? { name: 'groq', model: GROQ_MODEL }
+  : USE_OLLAMA
+    ? { name: 'ollama', model: OLLAMA_MODEL }
+    : { name: 'anthropic', model: 'claude-sonnet-4-6' };

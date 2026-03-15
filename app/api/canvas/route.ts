@@ -3,6 +3,16 @@ import { prisma } from '@/lib/db/prisma';
 import { CanvasUpdateSchema } from '@/lib/canvas/schema';
 import { auth } from '@clerk/nextjs/server';
 
+// Simple per-session rate limiter — max 30 canvas saves per minute
+const rlMap = new Map<string, number[]>();
+function isRateLimited(key: string): boolean {
+  const now  = Date.now();
+  const hits = (rlMap.get(key) ?? []).filter(t => now - t < 60_000);
+  hits.push(now);
+  rlMap.set(key, hits);
+  return hits.length > 30;
+}
+
 // PATCH /api/canvas — autosave canvas state
 export async function PATCH(req: NextRequest) {
   const body = await req.json();
@@ -19,6 +29,10 @@ export async function PATCH(req: NextRequest) {
   const isOwner = userId && session.userId === userId;
   const isGuest = guestToken && session.guestToken === guestToken;
   if (!isOwner && !isGuest) return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+
+  if (isRateLimited(sessionId)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
 
   // Validate canvas data shape
   const parsed = CanvasUpdateSchema.safeParse(canvasData);
