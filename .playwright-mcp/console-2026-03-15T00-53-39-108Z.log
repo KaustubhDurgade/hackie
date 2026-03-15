@@ -1,0 +1,173 @@
+[  168856ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ebOogJRZu8lvWN8mEeCh-' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 1097791ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1098355ms] [ERROR] Access to fetch at 'https://clerk-telemetry.com/v1/event' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3000/:0
+[ 1098356ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://clerk-telemetry.com/v1/event:0
+[ 1100142ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/:0
+[ 1100538ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1100709ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://coherent-stork-86.clerk.accounts.dev/v1/environment?__clerk_api_version=2025-11-10&_clerk_js_version=6.1.0&_method=PATCH&__clerk_db_jwt=dvb_3AxbM3yz3ZskhCnOlJ79itMAdEP:0
+[ 1100709ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://coherent-stork-86.clerk.accounts.dev/v1/client?__clerk_api_version=2025-11-10&_clerk_js_version=6.1.0&__clerk_db_jwt=dvb_3AxbM3yz3ZskhCnOlJ79itMAdEP:0
+[ 1100808ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://coherent-stork-86.clerk.accounts.dev/v1/environment?__clerk_api_version=2025-11-10&_clerk_js_version=6.1.0&_method=PATCH&__clerk_db_jwt=dvb_3AxbM3yz3ZskhCnOlJ79itMAdEP:0
+[ 1100815ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://coherent-stork-86.clerk.accounts.dev/v1/client?__clerk_api_version=2025-11-10&_clerk_js_version=6.1.0&__clerk_db_jwt=dvb_3AxbM3yz3ZskhCnOlJ79itMAdEP:0
+[ 1104299ms] [WARNING] The resource https://beloved-parrot-70.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[ 1141626ms] [ERROR] Access to fetch at 'https://coherent-stork-86.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fsession%2Fnew&__clerk_db_jwt=dvb_3AxbMXeE6thevD4Fn7QJ6CAV4g5' (redirected from 'http://localhost:3000/session/new?_rsc=vusbg') from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3000/:0
+[ 1141626ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://coherent-stork-86.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fsession%2Fnew&__clerk_db_jwt=dvb_3AxbMXeE6thevD4Fn7QJ6CAV4g5:0
+[ 1141627ms] [ERROR] Failed to fetch RSC payload for http://localhost:3000/session/new. Falling back to browser navigation. TypeError: Failed to fetch
+    at createFetch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:2588:24)
+    at fetchServerResponse (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:2490:27)
+    at navigateDynamicallyWithNoPrefetch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:7943:90)
+    at navigate (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:7728:15)
+    at navigateReducer (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:8239:45)
+    at clientReducer (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:9065:61)
+    at Object.action (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:9310:55)
+    at runAction (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:9215:38)
+    at dispatchAction (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:9278:9)
+    at Object.dispatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:9308:40)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:1489:29
+    at startTransition (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:5500:31)
+    at dispatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:1488:13)
+    at dispatchAppRouterAction (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:1470:5)
+    at dispatchNavigateAction (http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:9362:49)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_02409dcd._.js:617:13
+    at Object.startTransition (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:1279:31)
+    at linkClicked (http://localhost:3000/_next/static/chunks/node_modules_next_dist_02409dcd._.js:616:24)
+    at onClick (http://localhost:3000/_next/static/chunks/node_modules_next_dist_02409dcd._.js:857:13)
+    at executeDispatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10314:13)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:965:74)
+    at processDispatchQueue (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10340:41)
+    at http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10615:13
+    at batchedUpdates$1 (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:2253:44)
+    at dispatchEventForPluginEventSystem (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10416:9)
+    at dispatchEvent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:12935:37)
+    at dispatchDiscreteEvent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:12917:64) @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1142254ms] [ERROR]  Note that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. @ https://coherent-stork-86.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:23
+[ 1142370ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ https://coherent-stork-86.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:19
+[ 1142656ms] [ERROR] Access to fetch at 'https://clerk-telemetry.com/v1/event' from origin 'https://coherent-stork-86.accounts.dev' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://coherent-stork-86.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fsession%2Fnew:0
+[ 1142656ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://clerk-telemetry.com/v1/event:0
+[ 1142694ms] [ERROR] Access to fetch at 'https://clerk-telemetry.com/v1/event' from origin 'https://coherent-stork-86.accounts.dev' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://coherent-stork-86.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fsession%2Fnew:0
+[ 1142694ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://clerk-telemetry.com/v1/event:0
+[ 1200001ms] [ERROR]  Note that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. @ https://coherent-stork-86.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:23
+[ 1200018ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ https://coherent-stork-86.accounts.dev/_next/static/chunks/pages/_app-ae82798d2d1e6bbf.js:19
+[ 1202625ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/pat/9dc7a8287f18f579/1773537220375/e879b40771f60018104d2d93f6e11e6ff48d82aa125a075f4cf77c9d55bf6328/JKCLFSYRUg0nLuX:0
+[ 1202630ms] [ERROR]  Note that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/fuhda/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1202785ms] [ERROR] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/fuhda/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1202785ms] [ERROR] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/fuhda/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1202786ms] [WARNING] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/fuhda/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1202786ms] [WARNING] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/fuhda/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1205364ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1205544ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://beloved-parrot-70.clerk.accounts.dev/v1/client?__clerk_api_version=2025-11-10&_clerk_js_version=6.1.0&__clerk_db_jwt=dvb_3AxbMXeE6thevD4Fn7QJ6CAV4g5:0
+[ 1205638ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://beloved-parrot-70.clerk.accounts.dev/v1/environment?__clerk_api_version=2025-11-10&_clerk_js_version=6.1.0&_method=PATCH&__clerk_db_jwt=dvb_3AxbMXeE6thevD4Fn7QJ6CAV4g5:0
+[ 1206362ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1210028ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fsession%2Fnew:0
+[ 1224559ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1224757ms] [WARNING] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-internal-19jy9oa:empty"
+  - CSS ".cl-internal-19jy9oa > :first-of-type"
+  - CSS ".cl-internal-19jy9oa > :not(:first-of-type)"
+  - CSS ".cl-internal-1ufy96g:empty"
+  - CSS ".cl-internal-1ufy96g > :first-of-type"
+  (+15 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1225536ms] [ERROR]  Note that 'script-src' was not explicitly set, so 'default-src' is used as a fallback. @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/or36p/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1225772ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/pat/9dc7a8c0194a2db2/1773537244403/25318312316431fbef003802dc4a35225d10719ecd83b07ae9c90dd796504f3b/Pr_jJSaHug2-_qm:0
+[ 1225926ms] [ERROR] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/or36p/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1225926ms] [ERROR] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/or36p/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1225926ms] [WARNING] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/or36p/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1225926ms] [WARNING] %c%d font-size:0;color:transparent NaN @ https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/or36p/0x4AAAAAAAWXJGBD7bONzLBd/auto/fbE/new/normal?lang=en-us:0
+[ 1229774ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/session/new:0
+[ 1267041ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/session/3a874955-8368-4049-b7a5-dd7988eb6558:0
+[ 1272976ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/session/3a874955-8368-4049-b7a5-dd7988eb6558:0
+[ 1316485ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/session/3a874955-8368-4049-b7a5-dd7988eb6558:0
+[ 1360121ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/session/3a874955-8368-4049-b7a5-dd7988eb6558:0
+[ 1403736ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__69490238._.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/session/3a874955-8368-4049-b7a5-dd7988eb6558:0
+[ 1431050ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1431973ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1432258ms] [WARNING] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-internal-go4bxw:has(button:focus-visible)"
+  - CSS "button:hover .cl-internal-gxb76v"
+  - CSS ".cl-internal-o2kwkh ul"
+  - CSS ".cl-internal-o2kwkh p"
+  - CSS ".cl-internal-o2kwkh li"
+  (+3 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1446362ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1447174ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1447332ms] [WARNING] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-internal-go4bxw:has(button:focus-visible)"
+  - CSS "button:hover .cl-internal-gxb76v"
+  - CSS ".cl-internal-o2kwkh ul"
+  - CSS ".cl-internal-o2kwkh p"
+  - CSS ".cl-internal-o2kwkh li"
+  (+3 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1452795ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1453313ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/session/3a874955-8368-4049-b7a5-dd7988eb6558?_rsc=7h709:0
+[ 1453836ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[ 1453980ms] [WARNING] Clerk: Structural CSS detected that may break on updates.
+
+Found:
+  - CSS ".cl-internal-go4bxw:has(button:focus-visible)"
+  - CSS "button:hover .cl-internal-gxb76v"
+  - CSS ".cl-internal-o2kwkh ul"
+  - CSS ".cl-internal-o2kwkh p"
+  - CSS ".cl-internal-o2kwkh li"
+  (+3 more)
+
+These selectors depend on the internal DOM structure of Clerk's components, which may change when Clerk deploys component updates.
+To prevent breaking changes, install @clerk/ui and pass it to ClerkProvider:
+
+  import { ui } from '@clerk/ui'
+  <ClerkProvider ui={ui}>
+
+Learn more: https://clerk.com/docs/reference/components/versioning
+(code=structural_css_pin_clerk_ui) @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297

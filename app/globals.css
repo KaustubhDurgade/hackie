@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans:    var(--font-inter);
+  --font-display: var(--font-syne);
+  --font-serif:   var(--font-lora);
+
+  /* Warm light palette */
+  --color-cream:         #faf9f6;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #f5f3ef;
+  --color-surface-3:     #ede9e3;
+  --color-border:        #e2ddd6;
+  --color-border-strong: #c8c1b8;
+  --color-text:          #1c1917;
+  --color-text-2:        #6b6560;
+  --color-text-3:        #a8a29e;
+  --color-accent:        #b8956a;
+  --color-accent-light:  #f0e6d6;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: light; }
+
+body {
+  background: #faf9f6;
+  color: #1c1917;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.font-display { font-family: var(--font-syne), system-ui, sans-serif; }
+.font-serif   { font-family: var(--font-lora), Georgia, serif; }
+
+/* Scrollbar */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #f5f3ef; }
+::-webkit-scrollbar-thumb { background: #c8c1b8; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+
+/* Focus */
+*:focus-visible {
+  outline: 2px solid #b8956a;
+  outline-offset: 2px;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 28s linear infinite; }
+
+/* React Flow — light canvas */
+.react-flow__renderer        { background: #f5f3ef !important; }
+.react-flow__background      { background: #f5f3ef !important; }
+.react-flow__controls {
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+}
+.react-flow__controls button {
+  background: #ffffff !important;
+  border-color: #e2ddd6 !important;
+  color: #6b6560 !important;
+  box-shadow: none !important;
+}
+.react-flow__controls button:hover {
+  background: #f5f3ef !important;
+  color: #1c1917 !important;
+}
+.react-flow__minimap {
+  background: #ffffff !important;
+  border: 1px solid #e2ddd6 !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+/* Prose / markdown in chat */
+.chat-prose p          { margin-bottom: 0.6em; }
+.chat-prose p:last-child { margin-bottom: 0; }
+.chat-prose strong     { font-weight: 600; color: #1c1917; }
+.chat-prose em         { font-style: italic; color: #4a4540; }
+.chat-prose ul, .chat-prose ol { padding-left: 1.25em; margin-bottom: 0.6em; }
+.chat-prose li         { margin-bottom: 0.2em; }
+.chat-prose code       { background: #ede9e3; border-radius: 4px; padding: 0.1em 0.35em; font-size: 0.85em; font-family: ui-monospace, monospace; color: #7c4f28; }
+.chat-prose pre        { background: #ede9e3; border-radius: 8px; padding: 0.75em 1em; overflow-x: auto; margin: 0.5em 0; }
+.chat-prose pre code   { background: none; padding: 0; color: #5a3a1a; }
+.chat-prose h1, .chat-prose h2, .chat-prose h3 { font-weight: 600; margin-bottom: 0.3em; margin-top: 0.6em; color: #1c1917; font-family: var(--font-syne), system-ui, sans-serif; }
+.chat-prose h1 { font-size: 1.1em; }
+.chat-prose h2 { font-size: 1.05em; }
+.chat-prose h3 { font-size: 1em; }
+.chat-prose hr { border: none; border-top: 1px solid #e2ddd6; margin: 0.75em 0; }
+.chat-prose a  { color: #b8956a; text-decoration: underline; text-underline-offset: 2px; }
+.chat-prose blockquote { border-left: 2px solid #b8956a; padding-left: 0.75em; color: #6b6560; margin: 0.5em 0; }

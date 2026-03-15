@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Session {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  shareToken   String    @unique @map("share_token")
+  userId       String?   @map("user_id")
+  guestToken   String?   @map("guest_token")
+
+  track        String?
+  timeLimitHrs Int?      @map("time_limit_hrs")
+  teamSize     Int?      @map("team_size")
+  expertise    Json?
+  tools        Json?
+  judges       Json?
+
+  currentPhase Int       @default(1) @map("current_phase")
+  phaseData    Json?     @map("phase_data")
+
+  tokensUsed   Int       @default(0) @map("tokens_used")
+  tokenBudget  Int       @default(60000) @map("token_budget")
+
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  expiresAt    DateTime? @map("expires_at")
+
+  canvasSnapshots CanvasSnapshot[]
+  messages        Message[]
+
+  @@map("sessions")
+}
+
+model CanvasSnapshot {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId  String   @map("session_id") @db.Uuid
+  phase      Int
+  canvasData Json     @map("canvas_data")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("canvas_snapshots")
+}
+
+model Message {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String   @map("session_id") @db.Uuid
+  role      String
+  content   String
+  phase     Int?
+  tokens    Int?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
