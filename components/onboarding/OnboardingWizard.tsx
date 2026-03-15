@@ -20,6 +20,7 @@ export function OnboardingWizard() {
   const [step, setStep]       = useState<Step>(1);
   const [loading, setLoading] = useState(false);
   const [step1Error, setStep1Error] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   const [track, setTrack]         = useState('');
   const [timeLimitHrs, setTime]   = useState<number>(24);
@@ -30,6 +31,7 @@ export function OnboardingWizard() {
 
   const handleSubmit = async () => {
     setLoading(true);
+    setSubmitError('');
     try {
       const guestToken = localStorage.getItem('hackie_guest_token') ?? nanoid(24);
       localStorage.setItem('hackie_guest_token', guestToken);
@@ -51,10 +53,16 @@ export function OnboardingWizard() {
         }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        setSubmitError(data.error ?? 'Something went wrong. Please try again.');
+        setLoading(false);
+        return;
+      }
       if (data.guestToken) localStorage.setItem('hackie_guest_token', data.guestToken);
       router.push(`/session/${data.sessionId}`);
     } catch (err) {
       console.error(err);
+      setSubmitError('Network error — please check your connection and try again.');
       setLoading(false);
     }
   };
@@ -208,6 +216,9 @@ export function OnboardingWizard() {
               />
             </div>
 
+            {submitError && (
+              <p className="text-[#c0392b] text-xs">{submitError}</p>
+            )}
             <div className="flex justify-between">
               <button onClick={() => setStep(2)} className="text-[#a8a29e] hover:text-[#1c1917] text-sm transition-colors">Back</button>
               <div className="flex gap-3">
