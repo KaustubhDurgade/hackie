@@ -94,14 +94,14 @@ export async function POST(req: NextRequest) {
   let history: OrchestratorMessage[];
 
   if (isCanvasApply) {
-    const phaseMessages = session.messages.filter(m => m.phase === currentPhase);
+    const phaseMessages = session.messages.filter((m) => m.phase === currentPhase);
     history = [
-      ...phaseMessages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+      ...phaseMessages.map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content })),
       { role: 'user' as const, content: 'Apply canvas now.' },
     ];
   } else {
     history = [
-      ...session.messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+      ...session.messages.map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content })),
       { role: 'user' as const, content: message },
     ];
   }
