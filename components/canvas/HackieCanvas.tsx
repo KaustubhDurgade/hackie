@@ -117,6 +117,16 @@ export function HackieCanvas({ canvasNodes, canvasEdges, savedPositions, onNodeP
   const [rfNodes, setRfNodes, onNodesChange] = useNodesState<Node>([]);
   const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
+  // Always-current map of node positions so we can preserve them when new nodes are added
+  const livePositionsRef = useRef<Map<string, { x: number; y: number }>>(new Map());
+
+  // Keep livePositionsRef in sync with rfNodes on every render
+  useEffect(() => {
+    for (const n of rfNodes) {
+      if (n.type !== 'label') livePositionsRef.current.set(n.id, n.position);
+    }
+  }, [rfNodes]);
+
   // Track last external props to avoid re-laying on drag
   const lastNodesRef = useRef<CanvasNode[]>([]);
   const lastEdgesRef = useRef<CanvasEdge[]>([]);
@@ -124,6 +134,8 @@ export function HackieCanvas({ canvasNodes, canvasEdges, savedPositions, onNodeP
   useEffect(() => {
     // Only re-layout if the external props actually changed (by reference)
     if (lastNodesRef.current === canvasNodes && lastEdgesRef.current === canvasEdges) return;
+
+    const prevNodeIds = new Set(lastNodesRef.current.map(n => n.id));
     lastNodesRef.current = canvasNodes;
     lastEdgesRef.current = canvasEdges;
 
@@ -139,10 +151,13 @@ export function HackieCanvas({ canvasNodes, canvasEdges, savedPositions, onNodeP
       if (n.phase != null) phaseByNodeId.set(n.id, n.phase);
     }
 
-    // Apply saved drag positions as overrides on top of Dagre layout
+    // Position priority: savedPositions (drag) > livePositions (existing) > Dagre (new nodes only)
     const rfNodesToSet = buildReactFlowNodes(positioned).map(n => {
       const saved = savedPositions?.[n.id];
-      return saved ? { ...n, position: saved } : n;
+      if (saved) return { ...n, position: saved };
+      // Preserve position of nodes that already existed on canvas
+      const live = prevNodeIds.has(n.id) ? livePositionsRef.current.get(n.id) : undefined;
+      return live ? { ...n, position: live } : n;
     });
 
     setRfNodes(rfNodesToSet);
